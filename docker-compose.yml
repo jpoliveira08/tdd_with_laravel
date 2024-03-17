@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  nginx:
+    build: ./docker/services/nginx
+    container_name: nginx
+    ports:
+      - "8080:80"
+    networks:
+      - internal
+    volumes:
+      - ./app/:/var/www/html/
+      - ./logs/nginx:/var/log/nginx/
+
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/services/php/Dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    container_name: php
+    networks:
+      - internal
+    volumes:
+      - ./app/:/var/www/html/
+      - ./logs/php.log:/var/log/fpm-php.www.log
+    tty: true
+
+networks:
+  internal:
+    driver: bridge
