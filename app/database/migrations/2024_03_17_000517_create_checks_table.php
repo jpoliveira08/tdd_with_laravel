@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('checks', function (Blueprint $table) {
             $table->id();
             $table->integer('response_status');
-            $table->string('response_content');
+            $table->text('response_content');
             $table->integer('elapsed_time');
             $table->unsignedInteger('site_id')->index();
             $table->timestamps();

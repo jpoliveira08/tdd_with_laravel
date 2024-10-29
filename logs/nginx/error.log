@@ -544,3 +544,24 @@
 2024/03/16 23:57:43 [notice] 1#1: start worker process 38
 2024/03/16 23:57:43 [notice] 1#1: start worker process 39
 2024/03/16 23:57:43 [notice] 1#1: start worker process 40
+2024/10/29 10:37:07 [notice] 1#1: using the "epoll" event method
+2024/10/29 10:37:07 [notice] 1#1: nginx/1.27.2
+2024/10/29 10:37:07 [notice] 1#1: built by gcc 13.2.1 20240309 (Alpine 13.2.1_git20240309) 
+2024/10/29 10:37:07 [notice] 1#1: OS: Linux 6.10.13-3-MANJARO
+2024/10/29 10:37:07 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1073741816:1073741816
+2024/10/29 10:37:07 [notice] 1#1: start worker processes
+2024/10/29 10:37:07 [notice] 1#1: start worker process 29
+2024/10/29 10:37:07 [notice] 1#1: start worker process 30
+2024/10/29 10:37:07 [notice] 1#1: start worker process 31
+2024/10/29 10:37:07 [notice] 1#1: start worker process 32
+2024/10/29 10:37:07 [notice] 1#1: start worker process 33
+2024/10/29 10:37:07 [notice] 1#1: start worker process 34
+2024/10/29 10:37:07 [notice] 1#1: start worker process 35
+2024/10/29 10:37:07 [notice] 1#1: start worker process 36
+2024/10/29 10:37:07 [notice] 1#1: start worker process 37
+2024/10/29 10:37:07 [notice] 1#1: start worker process 38
+2024/10/29 10:37:07 [notice] 1#1: start worker process 39
+2024/10/29 10:37:07 [notice] 1#1: start worker process 40
+2024/10/29 10:50:45 [error] 36#36: *13 open() "/var/www/html/public/login" failed (2: No such file or directory), client: 172.22.0.1, server: localhost, request: "GET /login HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/"
+2024/10/29 10:50:47 [error] 36#36: *13 open() "/var/www/html/public/register" failed (2: No such file or directory), client: 172.22.0.1, server: localhost, request: "GET /register HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/"
+2024/10/29 10:50:51 [error] 36#36: *13 open() "/var/www/html/public/login" failed (2: No such file or directory), client: 172.22.0.1, server: localhost, request: "GET /login HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/"
