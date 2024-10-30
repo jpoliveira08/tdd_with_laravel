@@ -52,4 +52,24 @@ class SitesControllerTest extends TestCase
         // check if we are in the correct URL
         $this->assertEquals(route('sites.show', $site), url()->current());
     }
+
+    /** @test */
+    public function it_only_allows_authenticated_users_to_create_sites()
+    {
+        $user = User::factory()->create();
+
+        $response = $this
+            ->followingRedirects()
+            ->post(route('sites.store'), [
+                'name' => 'Google',
+                'url' => 'https://google.com'
+            ]);
+
+        $this->assertEquals(0, Site::count());
+
+        $response->assertSeeText('Login');
+
+        // check if we are in the correct URL
+        $this->assertEquals(route('login'), url()->current());
+    }
 }
