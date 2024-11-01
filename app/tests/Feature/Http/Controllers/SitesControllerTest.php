@@ -54,6 +54,24 @@ class SitesControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_requires_all_fields_to_be_present()
+    {
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->post(route('sites.store'), [
+                'name' => '',
+                'url' => ''
+            ]);
+
+        // make sure no site exists
+        $this->assertEquals(0, Site::count());
+
+        $response->assertSessionHasErrors(['name', 'url']);
+    }
+
+    /** @test */
     public function it_only_allows_authenticated_users_to_create_sites()
     {
         $user = User::factory()->create();
@@ -71,5 +89,22 @@ class SitesControllerTest extends TestCase
 
         // check if we are in the correct URL
         $this->assertEquals(route('login'), url()->current());
+    }
+
+    /** @test */
+    public function it_requires_the_url_to_have_a_valid_protocol()
+    {
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->post(route('sites.store'), [
+                'name' => 'Google',
+                'url' => 'google.com'
+            ]);
+
+        $this->assertEquals(0, Site::count());
+
+        $response->assertSessionHasErrors(['name', 'url']);
     }
 }
