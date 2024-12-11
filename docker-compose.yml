@@ -1,32 +1,84 @@
-version: '3.8'
-
 services:
   nginx:
-    build: ./docker/services/nginx
-    container_name: nginx
-    ports:
-      - "8080:80"
-    networks:
-      - internal
-    volumes:
-      - ./app/:/var/www/html/
-      - ./logs/nginx:/var/log/nginx/
-
-  php:
+    container_name: "nginx"
     build:
-      context: .
-      dockerfile: ./docker/services/php/Dockerfile
+      context: ./dockerfiles
+      dockerfile: nginx.dockerfile
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}
-    container_name: php
-    networks:
-      - internal
+    ports:
+      - "${FORWARD_NGINX_PORT:-80}:80"
     volumes:
-      - ./app/:/var/www/html/
-      - ./logs/php.log:/var/log/fpm-php.www.log
-    tty: true
+      - ./app:/var/www/html:delegated
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - laravel
+    restart: unless-stopped
+  mysql:
+    image: mysql:8.4.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql:/var/lib/mysql/
+      - ./dockerfiles/mysql/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "${FORWARD_DB_PORT:-3306}:3306"
+    networks:
+      - laravel
+    restart: unless-stopped
+  testdb:
+    image: mysql:8.4.0
+    container_name: testdb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - laravel
+    restart: unless-stopped
+  php:
+    container_name: "php"
+    build:
+      context: ./dockerfiles
+      dockerfile: php.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    ports:
+      - "${FORWARD_PHP_PORT:-9000}:9000"
+    volumes:
+      - ./app:/var/www/html:delegated
+      - ./dockerfiles/configs/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./dockerfiles/configs/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - laravel
+    restart: unless-stopped
+  npm:
+    container_name: "npm"
+    image: node:18.20-alpine
+    volumes:
+      - ./app:/var/www/html
+    ports:
+      - "${FORWARD_NPM_PORT:-3000}:3000"
+    working_dir: /var/www/html
+    entrypoint: ["npm"]
+    networks:
+      - laravel
+
+volumes:
+  mysql:
+    driver: local
 
 networks:
-  internal:
+  laravel:
     driver: bridge

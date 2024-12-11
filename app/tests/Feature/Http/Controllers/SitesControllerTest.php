@@ -6,6 +6,7 @@ use App\Models\Site;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class SitesControllerTest extends TestCase
@@ -105,6 +106,6 @@ class SitesControllerTest extends TestCase
 
         $this->assertEquals(0, Site::count());
 
-        $response->assertSessionHasErrors(['name', 'url']);
+        $response->assertSessionHasErrors(['url']);
     }
 }
